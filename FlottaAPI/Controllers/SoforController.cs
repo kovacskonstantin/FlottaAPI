@@ -137,5 +137,27 @@ namespace FlottaAPI.Controllers
                 return StatusCode(500, "Hiba a szerveren!" + ex.Message);
             }
         }
+
+        [HttpGet("SoforJarmu/{id}")]
+
+        public IActionResult GetSoforJarmu(int id)
+        {
+            try
+            {
+                Sofor vane = _context.Sofors.FirstOrDefault(s => s.Id == id);
+                if (vane == null)
+                {
+                    return NotFound("Hiányzik a sofőr!");
+
+                }
+                var result = _context.Kikuldottjarmus.Where(j => j.SoforNavigation.Id == id).Select(j => j.Gepjarmu).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest("Hib!" + ex.Message);
+            }
+        }
     }
 }
